@@ -4,6 +4,7 @@ zookeeper:
 
 netty:
   server:
+    name: room
     ssl: false
     port: 8888
     channel: io.netty.channel.socket.nio.NioServerSocketChannel

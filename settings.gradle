@@ -7,4 +7,6 @@ rootProject.name = 'game-server'
 
 include(":game-room", ":commons", ":game-gate")
 include 'net-client'
+include 'game-match'
+include 'game-core'
 

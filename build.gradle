@@ -22,6 +22,10 @@ buildscript {
 subprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+    apply plugin: 'io.spring.dependency-management'
 
     group 'com.twh'
     version '1.0-SNAPSHOT'
@@ -29,6 +33,20 @@ subprojects {
 
     repositories {
         mavenCentral()
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
     }
 }
 
@@ -65,69 +83,36 @@ project(":commons") {
     }
 }
 
-project(":game-gate") {
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'org.jetbrains.kotlin.jvm'
-    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
-    apply plugin: 'io.spring.dependency-management'
-
-
+project(":game-core") {
     dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter'
-        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-        compileOnly "org.springframework.boot:spring-boot-configuration-processor"
-        implementation 'org.jetbrains.kotlin:kotlin-reflect'
-
-        implementation project(":commons")
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    }
-
-    compileKotlin {
-        kotlinOptions {
-            freeCompilerArgs = ['-Xjsr305=strict']
-            jvmTarget = '1.8'
-        }
-    }
-
-    compileTestKotlin {
-        kotlinOptions {
-            freeCompilerArgs = ['-Xjsr305=strict']
-            jvmTarget = '1.8'
-        }
-    }
-}
-
-project(":game-room") {
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'org.jetbrains.kotlin.jvm'
-    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
-    apply plugin: 'io.spring.dependency-management'
-
-    dependencies {
-        implementation 'org.springframework.boot:spring-boot-starter'
-        implementation 'org.jetbrains.kotlin:kotlin-reflect'
-        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        compile 'org.springframework.boot:spring-boot-starter'
+        compile 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        compile 'org.jetbrains.kotlin:kotlin-reflect'
         compile project(":commons")
         // https://mvnrepository.com/artifact/io.vertx/vertx-core
         implementation ('io.vertx:vertx-core:3.7.0') {
             exclude group: 'io.netty'
         }
 
-        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testCompile 'org.springframework.boot:spring-boot-starter-test'
     }
+}
 
-    compileKotlin {
-        kotlinOptions {
-            freeCompilerArgs = ['-Xjsr305=strict']
-            jvmTarget = '1.8'
-        }
+project(":game-gate") {
+    dependencies {
+        implementation project(":game-core")
     }
+}
 
-    compileTestKotlin {
-        kotlinOptions {
-            freeCompilerArgs = ['-Xjsr305=strict']
-            jvmTarget = '1.8'
-        }
+project(":game-room") {
+    dependencies {
+        implementation project(":game-core")
+    }
+}
+
+project(":game-match") {
+    dependencies {
+        implementation project(":game-core")
     }
 }
 

@@ -13,6 +13,9 @@ import java.net.InetAddress;
 @Getter
 @Setter
 public class NettyServerProperties {
+
+    private String name;
+
     /**
      * 服务器端口
      */

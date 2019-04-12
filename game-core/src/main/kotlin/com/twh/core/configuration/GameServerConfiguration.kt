@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class RoomConfiguration {
+class GameServerConfiguration {
     @Bean
     @ConfigurationProperties(prefix = "netty.server.socket")
     fun nettySocketOptionProperties() = NettySocketOptionProperties()
