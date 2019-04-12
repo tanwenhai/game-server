@@ -1,4 +1,4 @@
-package com.twh.commons;
+package com.twh.core;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;

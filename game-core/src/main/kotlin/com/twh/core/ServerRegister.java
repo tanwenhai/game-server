@@ -1,4 +1,4 @@
-package com.twh.commons;
+package com.twh.core;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
@@ -6,7 +6,6 @@ import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**

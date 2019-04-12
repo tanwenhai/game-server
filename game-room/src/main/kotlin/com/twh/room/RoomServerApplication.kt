@@ -1,11 +1,13 @@
 package com.twh.room
 
-import com.twh.core.GameServerApplication
+import com.twh.core.configuration.GameServerBootstarp
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-@SpringBootApplication
-class RoomServerApplication : GameServerApplication()
+@SpringBootApplication(
+        scanBasePackages = ["com.twh"]
+)
+class RoomServerApplication : GameServerBootstarp()
 
 fun main(args: Array<String>) {
     runApplication<RoomServerApplication>(*args)

@@ -1,6 +1,6 @@
 package com.twh.gamegate.bootstrap
 
-import com.twh.commons.NettyServerProperties
+import com.twh.core.configuration.NettyServerProperties
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
 import io.netty.handler.ssl.SslContextBuilder

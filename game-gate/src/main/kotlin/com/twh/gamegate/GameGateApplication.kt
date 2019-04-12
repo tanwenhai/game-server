@@ -1,14 +1,13 @@
 package com.twh.gamegate
 
-import com.twh.commons.GameServer
-import com.twh.commons.NettyServerProperties
-import com.twh.commons.NettySocketOptionProperties
+import com.twh.core.GameServer
+import com.twh.core.configuration.NettyServerProperties
+import com.twh.core.configuration.NettySocketOptionProperties
+import com.twh.core.configuration.ZookeeperOption
 import com.twh.gamegate.bootstrap.ConnectionInitializer
 import com.twh.gamegate.bootstrap.ServerListener
-import com.twh.gamegate.configuration.ZookeeperOption
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.socket.SocketChannel
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
@@ -16,9 +15,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContextException
 
-@SpringBootApplication
+@SpringBootApplication(
+        scanBasePackages = ["com.twh"]
+)
 class GameGateApplication: ApplicationRunner {
-    val log = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
     lateinit var zookeeperOption: ZookeeperOption

@@ -1,6 +1,6 @@
 package com.twh.gamegate.bootstrap
 
-import com.twh.commons.ServerType
+import com.twh.core.ServerType
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.channel.*

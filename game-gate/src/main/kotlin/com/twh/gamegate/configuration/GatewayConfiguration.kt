@@ -1,7 +1,7 @@
 package com.twh.gamegate.configuration
 
-import com.twh.commons.NettyServerProperties
-import com.twh.commons.NettySocketOptionProperties
+import com.twh.core.configuration.NettyServerProperties
+import com.twh.core.configuration.NettySocketOptionProperties
 import io.netty.channel.EventLoopGroup
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.ApplicationContextException
