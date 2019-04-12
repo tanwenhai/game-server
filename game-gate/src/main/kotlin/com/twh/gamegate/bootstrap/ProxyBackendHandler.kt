@@ -21,12 +21,12 @@ class ProxyBackendHandler(private val inboundChannel: Channel) : ChannelInboundH
         // 后端返回的数据转发给客户端
         inboundChannel.writeAndFlush(msg).addListener {future ->
             if (future.isSuccess) {
-                // 继续读
+                // 继续读后端返回的数据
                 log.debug("next read backend server msg")
                 ctx.read()
             } else {
                 // TODO 失败了
-                log.warn("write msg to frontend({}) fail", ctx.channel().remoteAddress())
+                log.warn("write msg to client({}) fail", inboundChannel.remoteAddress())
             }
         }
     }

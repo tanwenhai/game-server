@@ -5,6 +5,7 @@ import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInboundHandlerAdapter
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.nio.NioSocketChannel
+import java.util.concurrent.TimeUnit
 
 class ClientTests
 
@@ -25,14 +26,13 @@ fun main() {
                 }
 
                 override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
-                    println("haha")
-                    val buf = Unpooled.buffer()
-                    buf.writeShort(ServerType.ROOM.value.toInt())
-                    buf.writeInt(4)
-                    buf.writeCharSequence("haha", Charsets.UTF_8)
-                    ctx.writeAndFlush(buf).addListener {
-                        println("send success")
-                    }
+                    ctx.executor().schedule({
+                        val buf = Unpooled.buffer()
+                        buf.writeShort(ServerType.ROOM.value.toInt())
+                        buf.writeInt(4)
+                        buf.writeCharSequence("haha", Charsets.UTF_8)
+                        ctx.writeAndFlush(buf)
+                    }, 1, TimeUnit.MILLISECONDS)
                 }
             })
     val f = b.connect("127.0.0.1", 9999)
