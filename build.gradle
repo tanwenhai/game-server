@@ -1,0 +1,152 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name "aliyunmaven"
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "http://maven.seasar.org/maven2" }
+        maven { url "http://maven.seasar.org/maven2-snapshot" }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.21"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:1.3.21"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
+        classpath "io.franzbecker:gradle-lombok:1.14"
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
+    }
+}
+
+subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+
+    group 'com.twh'
+    version '1.0-SNAPSHOT'
+    sourceCompatibility = '1.8'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+project(":commons") {
+    apply plugin: "io.franzbecker.gradle-lombok"
+    apply plugin: 'com.google.osdetector'
+
+    dependencies {
+        // https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper
+        compile group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.4.13'
+        // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
+        // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.8'
+        // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+        compile group: 'io.netty', name: 'netty-all', version: '4.1.34.Final'
+
+        if (osdetector.classifier.indexOf('linux') != -1) {
+            // https://mvnrepository.com/artifact/io.netty/netty-transport-native-epoll
+            compile group: 'io.netty', name: 'netty-transport-native-epoll', version: '4.1.34.Final', classifier: osdetector.classifier
+        }
+
+        // https://mvnrepository.com/artifact/com.google.guava/guava
+        compile group: 'com.google.guava', name: 'guava', version: '27.1-jre'
+
+        compileOnly 'org.projectlombok:lombok:1.18.4'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+}
+
+project(":game-gate") {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+    apply plugin: 'io.spring.dependency-management'
+
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+        implementation 'org.jetbrains.kotlin:kotlin-reflect'
+
+        compile project(":commons")
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+}
+
+project(":game-room") {
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+        implementation 'org.jetbrains.kotlin:kotlin-reflect'
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        compile project(":commons")
+        // https://mvnrepository.com/artifact/io.vertx/vertx-core
+        implementation ('io.vertx:vertx-core:3.7.0') {
+            exclude group: 'io.netty'
+        }
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+}
+
+project(":net-client") {
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+
+    dependencies {
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        implementation 'org.jetbrains.kotlin:kotlin-reflect'
+
+        compile project(":commons")
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+}

@@ -1,0 +1,49 @@
+package com.twh.commons;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @author tanwenhai@bilibili.com
+ */
+@Getter
+@Setter
+public class NettySocketOptionProperties {
+    /**
+     * 周期性测试连接是否存活
+     */
+    private Boolean keepalive = true;
+
+    /**
+     * 握手队列大小
+     */
+    private Integer backlog = 1 << 8;
+
+    /**
+     * 接收的socket缓冲区
+     */
+    private Integer rcvbuf = 1 << 12;
+
+    /**
+     * 写的socket缓冲区
+     */
+    private Integer sndbuf = 1 << 12;
+
+    /**
+     * tcp no delay
+     */
+    private Boolean nodelay = true;
+
+    private Boolean autoClose = false;
+
+    private Boolean autoRead = true;
+
+    private Boolean reuseaddr = false;
+
+    /**
+     * 等待client连接的超时时间
+     */
+    private Integer timeout = 6000;
+
+    private Boolean tcpquickack = false;
+}

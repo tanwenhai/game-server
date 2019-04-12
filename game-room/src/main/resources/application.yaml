@@ -1,0 +1,14 @@
+zookeeper:
+  connection: zoo1:2181,zoo2:2182,zoo3:2183
+  root-path: /game-server
+
+netty:
+  server:
+    ssl: false
+    port: 8888
+    channel: io.netty.channel.socket.nio.NioServerSocketChannel
+    boss-group:
+      eventLoopGroup: io.netty.channel.nio.NioEventLoopGroup
+    socket:
+      keepalive: true
+      backlog: 1024
