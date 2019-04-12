@@ -49,9 +49,9 @@ public class GameServer<C extends Channel> {
         b.option(ChannelOption.SO_BACKLOG, nettySocketOptionProperties.getBacklog());
         b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
-        if (log.isDebugEnabled()) {
+//        if (log.isDebugEnabled()) {
             b.handler(new LoggingHandler(LogLevel.DEBUG));
-        }
+//        }
 
         // 连接处理
         b.childHandler(connectionInitializer);

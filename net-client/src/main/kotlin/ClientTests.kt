@@ -24,8 +24,15 @@ fun main() {
                     }
                 }
 
-                override fun channelRead(ctx: ChannelHandlerContext?, msg: Any?) {
-                    super.channelRead(ctx, msg)
+                override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
+                    println("haha")
+                    val buf = Unpooled.buffer()
+                    buf.writeShort(ServerType.ROOM.value.toInt())
+                    buf.writeInt(4)
+                    buf.writeCharSequence("haha", Charsets.UTF_8)
+                    ctx.writeAndFlush(buf).addListener {
+                        println("send success")
+                    }
                 }
             })
     val f = b.connect("127.0.0.1", 9999)

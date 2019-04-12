@@ -15,11 +15,12 @@ class ProxyFrontendHandler : ChannelInboundHandlerAdapter() {
     private val serverChannelMap = HashMap<ServerType, ChannelFuture>()
 
     override fun channelActive(ctx: ChannelHandlerContext) {
-        log.debug("client connection {}", ctx.channel().remoteAddress())
+        log.debug("client establish connection {}", ctx.channel().remoteAddress())
         ctx.channel().read()
     }
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
+        log.debug("receive client msg")
         if (msg is ByteBuf) {
             val readableBytes = msg.readableBytes()
             // 可读取的字节数大于6，serverType占两个字节len四个字节data最少需要一个字节
@@ -43,9 +44,11 @@ class ProxyFrontendHandler : ChannelInboundHandlerAdapter() {
                                 conn.channel().writeAndFlush(forwardMsg).addListener { future ->
                                     if (future.isSuccess) {
                                         // 转发完了，继续读取下一个要转发的消息
+                                        log.debug("forward to backend done next read client msg")
                                         ctx.read()
                                     } else {
                                         // TODO 失败了
+                                        log.warn("forward to backend({}) fail", conn.channel().remoteAddress())
                                     }
                                 }
                             }

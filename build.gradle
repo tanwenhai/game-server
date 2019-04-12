@@ -38,7 +38,12 @@ project(":commons") {
 
     dependencies {
         // https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper
-        compile group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.4.13'
+        compile ('org.apache.zookeeper:zookeeper:3.4.13') {
+            exclude group: 'org.slf4j'
+            exclude group: 'log4j'
+        }
+        // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+        compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.26'
         // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
         implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
         // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
@@ -73,7 +78,7 @@ project(":game-gate") {
         compileOnly "org.springframework.boot:spring-boot-configuration-processor"
         implementation 'org.jetbrains.kotlin:kotlin-reflect'
 
-        compile project(":commons")
+        implementation project(":commons")
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
     }
 

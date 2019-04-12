@@ -12,18 +12,21 @@ class ProxyBackendHandler(private val inboundChannel: Channel) : ChannelInboundH
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     override fun channelActive(ctx: ChannelHandlerContext) {
-        log.debug("connection backend {}", ctx.channel().remoteAddress())
+        log.debug("connection to backend server {}", ctx.channel().remoteAddress())
         ctx.read()
     }
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
+        log.debug("receive backend msg")
         // 后端返回的数据转发给客户端
         inboundChannel.writeAndFlush(msg).addListener {future ->
             if (future.isSuccess) {
                 // 继续读
-                ctx.channel().read()
+                log.debug("next read backend server msg")
+                ctx.read()
             } else {
                 // TODO 失败了
+                log.warn("write msg to frontend({}) fail", ctx.channel().remoteAddress())
             }
         }
     }
