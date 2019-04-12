@@ -1,9 +1,9 @@
 package com.twh.core.configuration
 
+import com.twh.commons.ServerMetaData
+import com.twh.commons.ServerStatus
+import com.twh.commons.ServerType
 import com.twh.core.GameServer
-import com.twh.core.ServerMetaData
-import com.twh.core.ServerStatus
-import com.twh.core.ServerType
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.socket.SocketChannel
@@ -43,16 +43,16 @@ open class GameServerBootstrap: ApplicationRunner {
                 .serverStatus(ServerStatus.NORMAL)
                 .build()
                 .toJsonByteArray()
-        zkCli.create("${zookeeperOption.rootPath}/${serverProperties.name}", data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL)
+        zkCli.create("${zookeeperOption.rootPath}/${serverProperties.name}", data,
+                ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL)
         try {
-            GameServer.builder<SocketChannel>()
-                    .nettySocketOptionProperties(nettySocketOptionProperties)
-                    .serverProperties(serverProperties)
-                    .bossGroup(bossGroup)
-                    .workGroup(workGroup)
-                    .connectionInitializer(connectionInitializer)
-                    .build()
-                    .start()
+            GameServer(
+                nettySocketOptionProperties,
+                serverProperties,
+                bossGroup,
+                workGroup,
+                connectionInitializer
+            ).start()
         } catch (e: Exception) {
             throw ApplicationContextException(e.message!!, e)
         }

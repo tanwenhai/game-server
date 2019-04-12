@@ -12,35 +12,35 @@ class NettyServerProperties {
     /**
      * 服务器端口
     */
-    internal var port = 9999
+    var port = 9999
 
     /**
      * 服务器IP
      */
-    internal var address = InetAddress.getLoopbackAddress()
+    var address = InetAddress.getLoopbackAddress()
 
     /**
      * 开启 SSL
      */
-    internal var ssl = false
+    var ssl = false
 
     /**
      * 处理业务的线程组
      */
-    internal var blockGroup = EventLoopGroupProperties("business")
+    var blockGroup = EventLoopGroupProperties("business")
 
     /**
      * 处理连接的线程组
      */
-    internal var bossGroup = EventLoopGroupProperties("boss")
+    var bossGroup = EventLoopGroupProperties("boss")
 
     /**
      * 处理读写的线程组
      */
-    internal var workGroup = EventLoopGroupProperties("work")
+    var workGroup = EventLoopGroupProperties("work")
 
     /**
      * channel 类型 windows nio/linux epool
      */
-    internal var channel = NioServerSocketChannel::class.java
+    var channel = NioServerSocketChannel::class.java
 }

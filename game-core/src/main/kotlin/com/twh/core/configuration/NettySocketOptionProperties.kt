@@ -7,38 +7,38 @@ class NettySocketOptionProperties {
     /**
      * 周期性测试连接是否存活
      */
-    internal var keepalive = true
+    var keepalive = true
 
     /**
      * 握手队列大小
      */
-    internal var backlog = 1 shl 8
+    var backlog = 1 shl 8
 
     /**
      * 接收的socket缓冲区
      */
-    internal var rcvbuf = 1 shl 12
+    var rcvbuf = 1 shl 12
 
     /**
      * 写的socket缓冲区
      */
-    internal var sndbuf = 1 shl 12
+    var sndbuf = 1 shl 12
 
     /**
      * tcp no delay
      */
-    internal var nodelay = true
+    var nodelay = true
 
-    internal var autoClose = false
+    var autoClose = false
 
-    internal var autoRead = true
+    var autoRead = true
 
-    internal var reuseaddr = false
+    var reuseaddr = false
 
     /**
      * 等待client连接的超时时间
      */
-    internal var timeout = 6000
+    var timeout = 6000
 
-    internal var tcpquickack = false
+    var tcpquickack = false
 }

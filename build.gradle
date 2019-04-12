@@ -1,13 +1,11 @@
 buildscript {
     repositories {
-        mavenCentral()
+        mavenLocal()
         maven {
             name "aliyunmaven"
-            url "http://maven.aliyun.com/nexus/content/groups/public/"
+            url "https://maven.aliyun.com/repository/central/"
         }
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "http://maven.seasar.org/maven2" }
-        maven { url "http://maven.seasar.org/maven2-snapshot" }
+        maven { url "https://maven.aliyun.com/repository/gradle-plugin/" }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE"
@@ -32,7 +30,11 @@ subprojects {
     sourceCompatibility = '1.8'
 
     repositories {
-        mavenCentral()
+        maven {
+            name "aliyunmaven"
+            url "https://maven.aliyun.com/repository/central/"
+        }
+        mavenLocal()
     }
 
     compileKotlin {
@@ -63,11 +65,11 @@ project(":commons") {
         // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
         compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.26'
         // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
+        compileOnly group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
         // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
-        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.8'
+        compileOnly group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.8'
         // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+        compileOnly group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
         compile group: 'io.netty', name: 'netty-all', version: '4.1.34.Final'
 
         if (osdetector.classifier.indexOf('linux') != -1) {
