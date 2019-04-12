@@ -10,16 +10,14 @@ class GameServerAutoConfiguration {
 
     @ConditionalOnMissingBean(NettySocketOptionProperties::class)
     @Bean
-    @ConfigurationProperties(prefix = "netty.server.socket")
     fun nettySocketOptionProperties() = NettySocketOptionProperties()
 
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(NettyServerProperties::class)
     @Bean
-    @ConfigurationProperties(prefix = "netty.server")
     fun nettyServerProperties() = NettyServerProperties()
 
-    @ConditionalOnMissingBean
-    @Bean(destroyMethod = "shutdownGracefully")
+    @ConditionalOnMissingBean(EventLoopGroup::class, name = ["bossGroup"])
+    @Bean(name = ["bossGroup"], destroyMethod = "shutdownGracefully")
     fun bossGroup(): EventLoopGroup {
         try {
             return nettyServerProperties().bossGroup.newInstance()
@@ -29,8 +27,8 @@ class GameServerAutoConfiguration {
 
     }
 
-    @ConditionalOnMissingBean
-    @Bean(destroyMethod = "shutdownGracefully")
+    @ConditionalOnMissingBean(EventLoopGroup::class, name = ["workGroup"])
+    @Bean(name = ["workGroup"], destroyMethod = "shutdownGracefully")
     fun workGroup(): EventLoopGroup {
         try {
             return nettyServerProperties().workGroup.newInstance()
@@ -39,11 +37,11 @@ class GameServerAutoConfiguration {
         }
     }
 
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(ZookeeperOption::class)
     @Bean
     fun zookeeperOption() = ZookeeperOption()
 
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(GameServerBootstrap::class)
     @Bean
     fun gameServerBootstrap() = GameServerBootstrap()
 }

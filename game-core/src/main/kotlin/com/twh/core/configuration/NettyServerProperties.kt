@@ -2,9 +2,10 @@ package com.twh.core.configuration
 
 import com.twh.core.EventLoopGroupProperties
 import io.netty.channel.socket.nio.NioServerSocketChannel
+import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.InetAddress
 
-
+@ConfigurationProperties(prefix = "netty.server")
 class NettyServerProperties {
     internal var name: String = "default"
 
