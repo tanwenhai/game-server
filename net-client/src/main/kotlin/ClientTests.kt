@@ -1,4 +1,4 @@
-import com.twh.core.ServerType
+import com.twh.commons.ServerType
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.Unpooled
 import io.netty.channel.ChannelHandlerContext
@@ -17,7 +17,7 @@ fun main() {
             .handler(object : ChannelInboundHandlerAdapter() {
                 override fun channelActive(ctx: ChannelHandlerContext) {
                     val buf = Unpooled.buffer()
-                    buf.writeShort(com.twh.core.ServerType.ROOM.value.toInt())
+                    buf.writeShort(ServerType.ROOM.value.toInt())
                     buf.writeInt(4)
                     buf.writeCharSequence("haha", Charsets.UTF_8)
                     ctx.writeAndFlush(buf).addListener {
@@ -28,7 +28,7 @@ fun main() {
                 override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
                     ctx.executor().schedule({
                         val buf = Unpooled.buffer()
-                        buf.writeShort(com.twh.core.ServerType.ROOM.value.toInt())
+                        buf.writeShort(ServerType.ROOM.value.toInt())
                         buf.writeInt(4)
                         buf.writeCharSequence("haha", Charsets.UTF_8)
                         ctx.writeAndFlush(buf)

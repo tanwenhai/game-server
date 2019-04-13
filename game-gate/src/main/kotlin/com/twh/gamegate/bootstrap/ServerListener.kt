@@ -1,5 +1,6 @@
 package com.twh.gamegate.bootstrap
 
+import com.twh.core.configuration.ZookeeperOption
 import org.apache.zookeeper.CreateMode
 import org.apache.zookeeper.Watcher
 import org.apache.zookeeper.ZooDefs

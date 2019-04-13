@@ -7,7 +7,6 @@ import com.twh.core.configuration.ZookeeperOption
 import com.twh.gamegate.bootstrap.ConnectionInitializer
 import com.twh.gamegate.bootstrap.ServerListener
 import io.netty.channel.EventLoopGroup
-import io.netty.channel.socket.SocketChannel
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
@@ -15,9 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContextException
 
-@SpringBootApplication(
-        scanBasePackages = ["com.twh"]
-)
+@SpringBootApplication
 class GameGateApplication: ApplicationRunner {
 
     @Autowired
@@ -41,14 +38,7 @@ class GameGateApplication: ApplicationRunner {
     override fun run(args: ApplicationArguments) {
         ServerListener(zookeeperOption).updateServerList()
         try {
-            GameServer.builder<SocketChannel>()
-                    .nettySocketOptionProperties(nettySocketOptionProperties)
-                    .serverProperties(serverProperties)
-                    .bossGroup(bossGroup)
-                    .workGroup(workGroup)
-                    .connectionInitializer(connectionInitializer)
-                    .build()
-                    .start()
+            GameServer(nettySocketOptionProperties, serverProperties, bossGroup, workGroup, connectionInitializer).start()
         } catch (e: Exception) {
             throw ApplicationContextException(e.message!!, e)
         }

@@ -14,7 +14,7 @@ class ConnectionInitializer : ChannelInitializer<SocketChannel>() {
     lateinit var serverProperties: NettyServerProperties
 
     override fun initChannel(ch: SocketChannel) {
-        if (serverProperties.isSsl) {
+        if (serverProperties.ssl) {
             val ssc = SelfSignedCertificate()
             val sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build()
             // tls layer

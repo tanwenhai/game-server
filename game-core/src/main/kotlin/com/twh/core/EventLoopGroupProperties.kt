@@ -18,15 +18,9 @@ class EventLoopGroupProperties(private val threadPrefix: String) {
 
     @Throws(Exception::class)
     fun newInstance(): EventLoopGroup {
-        if (threadPrefix != null) {
-            val threadFactory = DefaultThreadFactory(threadPrefix)
+        val threadFactory = DefaultThreadFactory(threadPrefix)
 
-            val constructor = eventLoopGroup.getConstructor(Int::class.javaPrimitiveType, ThreadFactory::class.java)
-            return constructor.newInstance(threads, threadFactory)
-        }
-
-        val constructor = eventLoopGroup.getConstructor(Int::class.javaPrimitiveType)
-
-        return constructor.newInstance(threads)
+        val constructor = eventLoopGroup.getConstructor(Int::class.javaPrimitiveType, ThreadFactory::class.java)
+        return constructor.newInstance(threads, threadFactory)
     }
 }
