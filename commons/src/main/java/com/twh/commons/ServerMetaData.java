@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Objects;
-
 /**
  * @author tanwenhai@bilibili.com
  */

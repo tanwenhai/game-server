@@ -1,5 +1,6 @@
 package com.twh.core.configuration
 
+import com.twh.core.ServerListener
 import io.netty.channel.EventLoopGroup
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -43,4 +44,7 @@ class GameServerAutoConfiguration {
     @ConditionalOnMissingBean(GameServerBootstrap::class)
     @Bean
     fun gameServerBootstrap() = GameServerBootstrap()
+
+    @Bean
+    fun serverListener() = ServerListener()
 }
