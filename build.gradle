@@ -17,12 +17,6 @@ buildscript {
     }
 }
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
-
 subprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
@@ -104,7 +98,7 @@ project(":game-core") {
         compile ('io.vertx:vertx-core:3.7.0') {
             exclude group: 'io.netty'
         }
-        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+        compileOnly "org.springframework.boot:spring-boot-configuration-processor"
 
         testCompile 'org.springframework.boot:spring-boot-starter-test'
     }
