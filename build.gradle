@@ -9,7 +9,7 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.21"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.30"
         classpath "org.jetbrains.kotlin:kotlin-allopen:1.3.21"
         classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
         classpath "io.franzbecker:gradle-lombok:1.14"

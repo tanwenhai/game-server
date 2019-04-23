@@ -35,6 +35,7 @@ class GameGateApplication: ApplicationRunner {
     @Autowired
     lateinit var connectionInitializer: ConnectionInitializer
 
+    @Throws
     override fun run(args: ApplicationArguments) {
         ServerListener(zookeeperOption).updateServerList()
         try {

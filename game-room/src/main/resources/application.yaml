@@ -4,7 +4,7 @@ zookeeper:
 
 netty:
   server:
-    name: room
+    name: room-server
     server-type: ROOM
     ssl: false
     port: 8888

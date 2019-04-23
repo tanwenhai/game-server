@@ -8,6 +8,7 @@ import java.net.InetAddress
 
 @ConfigurationProperties(prefix = "netty.server")
 class NettyServerProperties {
+
     var name: String = "default"
 
     val serverType: ServerType? = null
@@ -20,7 +21,7 @@ class NettyServerProperties {
     /**
      * 服务器IP
      */
-    var address = InetAddress.getLoopbackAddress()
+    var address: InetAddress = InetAddress.getLoopbackAddress()
 
     /**
      * 开启 SSL

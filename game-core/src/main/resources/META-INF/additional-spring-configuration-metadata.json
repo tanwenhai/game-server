@@ -1,0 +1,107 @@
+{
+  "properties": [
+    {
+      "name": "netty.server.name",
+      "type": "java.lang.String",
+      "description": "服务名.",
+      "defaultValue": false,
+      "deprecation": {
+        "replacement": "spring.security.filter.dispatcher-types",
+        "level": "error"
+      }
+    },
+    {
+      "name": "netty.server.server-type",
+      "type": "com.twh.commons.ServerType",
+      "description": "服务类型.",
+      "deprecation": {
+        "replacement": "spring.security.filter.dispatcher-types",
+        "level": "error"
+      }
+    },
+    {
+      "name": "netty.server.port",
+      "type": "java.lang.Integer",
+      "description": "端口号.",
+      "defaultValue": 0,
+      "deprecation": {
+        "replacement": "spring.security.filter.order",
+        "level": "error"
+      }
+    },
+    {
+      "name": "netty.server.address",
+      "type": "java.net.InetAddress",
+      "description": "网卡.",
+      "defaultValue": "0.0.0.0",
+      "deprecation": {
+        "replacement": "spring.security.filter.order",
+        "level": "error"
+      }
+    },
+    {
+      "name": "netty.server.ssl",
+      "type": "java.lang.Boolean",
+      "description": "是否启用ssl.",
+      "defaultValue": false,
+      "deprecation": {
+        "replacement": "spring.security.filter.order",
+        "level": "error"
+      }
+    },
+    {
+      "name": "netty.server.blockGroup",
+      "type": "com.twh.core.EventLoopGroupProperties",
+      "description": "netty business event loop group .",
+      "deprecation": {
+        "replacement": "spring.security.filter.order",
+        "level": "error"
+      }
+    },
+    {
+      "name": "netty.server.bossGroup",
+      "type": "com.twh.core.EventLoopGroupProperties",
+      "description": "netty listen event loop group.",
+      "deprecation": {
+        "replacement": "spring.security.filter.order",
+        "level": "error"
+      }
+    },
+    {
+      "name": "netty.server.workGroup",
+      "type": "com.twh.core.EventLoopGroupProperties",
+      "description": "netty read/write event loop group.",
+      "deprecation": {
+        "replacement": "spring.security.filter.order",
+        "level": "error"
+      }
+    },
+    {
+      "name": "netty.server.channel",
+      "type": "io.netty.channel.socket.ServerSocketChannel",
+      "description": "netty server socket channel type.",
+      "deprecation": {
+        "replacement": "spring.security.filter.order",
+        "level": "error"
+      }
+    },
+    {
+      "name": "zookeeper.connection",
+      "type": "java.lang.String",
+      "description": "zookeeper connection string.",
+      "deprecation": {
+        "replacement": "spring.security.filter.order",
+        "level": "error"
+      }
+    },
+    {
+      "name": "zookeeper.root-path",
+      "type": "java.lang.String",
+      "description": "zookeeper root node path.",
+      "deprecation": {
+        "replacement": "spring.security.filter.order",
+        "level": "error"
+      }
+    }
+  ]
+}

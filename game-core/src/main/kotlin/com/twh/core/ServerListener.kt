@@ -2,52 +2,43 @@ package com.twh.core
 
 import com.twh.commons.ServerMetaData
 import com.twh.commons.ServerStatus
-import com.twh.commons.ServerType
+import com.twh.core.configuration.NettyServerProperties
 import com.twh.core.configuration.ZookeeperOption
 import org.apache.zookeeper.CreateMode
 import org.apache.zookeeper.ZooDefs
 import org.apache.zookeeper.ZooKeeper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
-import java.net.InetAddress
 
 /**
  * todo 服务状态维护
  */
 class ServerListener : ApplicationRunner {
+
     @Autowired
     lateinit var zookeeperOption: ZookeeperOption
 
-    @Value("\${netty.server.name}")
-    var serverName: String? = null
 
-    @Value("\${netty.server.type}")
-    var serverType: ServerType? = null
-
-    @Value("\${netty.server.address}")
-    var serverAddress: InetAddress? = null
-
-    @Value("\${netty.server.port}")
-    var serverPort: Int? = null
+    @Autowired
+    lateinit var serverProperties: NettyServerProperties
 
     override fun run(args: ApplicationArguments) {
-        if (serverType !== null && serverName !== null && serverAddress !== null && serverPort !== null) {
+        val serverName = serverProperties.name
+
+        if (serverProperties.serverType !== null && serverProperties.name.isNotEmpty()) {
             val zkCli = ZooKeeper(zookeeperOption.connection, 5000) {}
             // 服务启动向zk注册
             val serverMetaData = ServerMetaData.builder()
-                    .serverType(serverType)
+                    .serverType(serverProperties.serverType)
                     .serverStatus(ServerStatus.NORMAL)
-                    .ip(serverAddress!!.hostAddress)
-                    .port(serverPort!!)
+                    .ip(serverProperties.address.hostAddress)
+                    .port(serverProperties.port)
                     .build()
             zkCli.create("${zookeeperOption.rootPath}/$serverName",
                     serverMetaData.toJsonByteArray(),
                     ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL)
         }
-
-
     }
 
 }
