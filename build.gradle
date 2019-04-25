@@ -20,6 +20,7 @@ buildscript {
 subprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
+    apply plugin: 'kotlin'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'org.jetbrains.kotlin.jvm'
     apply plugin: 'org.jetbrains.kotlin.plugin.spring'
@@ -27,19 +28,6 @@ subprojects {
 
     group 'com.twh'
     version '1.0-SNAPSHOT'
-    sourceCompatibility = '1.8'
-
-    repositories {
-        maven {
-            name "aliyunmaven"
-            url "https://maven.aliyun.com/repository/central/"
-        }
-        mavenLocal()
-    }
-
-    dependencies {
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-    }
 
     compileKotlin {
         kotlinOptions {
@@ -54,11 +42,21 @@ subprojects {
             jvmTarget = '1.8'
         }
     }
+
+    repositories {
+        maven {
+            name "aliyunmaven"
+            url "https://maven.aliyun.com/repository/central/"
+        }
+        mavenLocal()
+    }
 }
 
 project(":commons") {
     apply plugin: "io.franzbecker.gradle-lombok"
     apply plugin: 'com.google.osdetector'
+
+    sourceCompatibility = '1.8'
 
     dependencies {
         // https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper
@@ -85,6 +83,8 @@ project(":commons") {
         compile group: 'com.google.guava', name: 'guava', version: '27.1-jre'
 
         compileOnly 'org.projectlombok:lombok:1.18.4'
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+
     }
 }
 
@@ -99,7 +99,7 @@ project(":game-core") {
             exclude group: 'io.netty'
         }
         compileOnly "org.springframework.boot:spring-boot-configuration-processor"
-
+        testCompile group: 'junit', name: 'junit', version: '4.12'
         testCompile 'org.springframework.boot:spring-boot-starter-test'
     }
 }
@@ -132,6 +132,8 @@ project(":net-client") {
             exclude group: 'io.netty'
         }
         implementation "io.vertx:vertx-lang-kotlin:3.7.0"
+        // https://mvnrepository.com/artifact/io.vertx/vertx-ext
+        compile group: 'io.vertx', name: 'vertx-ext', version: '34', ext: 'pom'
 
         compile project(":commons")
     }
