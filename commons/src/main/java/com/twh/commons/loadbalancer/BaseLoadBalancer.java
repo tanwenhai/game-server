@@ -7,9 +7,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author tanwenhai@bilibili.com
  */
 public class BaseLoadBalancer<T extends INode> implements ILoadBalancer<T> {
-    IRule<T> rule;
+    private IRule<T> rule;
 
-    CopyOnWriteArrayList<T> servers;
+    private CopyOnWriteArrayList<T> servers = new CopyOnWriteArrayList<>();
 
     public BaseLoadBalancer(IRule<T> rule) {
         this.rule = rule;
@@ -22,6 +22,7 @@ public class BaseLoadBalancer<T extends INode> implements ILoadBalancer<T> {
 
     @Override
     public T chooseNode(Object key) {
+        rule.setLoadBalancer(this);
         return rule.choose(key);
     }
 

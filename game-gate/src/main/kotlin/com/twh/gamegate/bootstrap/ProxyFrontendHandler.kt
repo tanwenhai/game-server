@@ -43,6 +43,7 @@ class ProxyFrontendHandler(private val lb: ILoadBalancer<INode>) : SimpleChannel
         for (value in ServerType.values()) {
             if (value.test(cmd)) {
                 serverType = value
+                break
             }
         }
 
@@ -80,7 +81,7 @@ class ProxyFrontendHandler(private val lb: ILoadBalancer<INode>) : SimpleChannel
 
             // 建立到后端的服务器
             b.connect(metaData.ip, metaData.port).channel()
-        }.writeAndFlush(msg).addListener {
+        }.writeAndFlush(msg.copy()).addListener {
             future ->
             if (future.isSuccess) {
                 // 转发完了，继续读取下一个要转发的消息
@@ -88,6 +89,7 @@ class ProxyFrontendHandler(private val lb: ILoadBalancer<INode>) : SimpleChannel
                 ctx.read()
             } else {
                 // 失败了， 将失败节点移除重试下一个节点
+                log.error("转发至后端服务失败", future.cause())
                 lb.markServerDown(node)
                 forward2server(serverType, ctx, msg)
             }

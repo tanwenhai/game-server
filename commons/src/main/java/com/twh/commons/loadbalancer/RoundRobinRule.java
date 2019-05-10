@@ -12,7 +12,6 @@ public class RoundRobinRule<T extends INode> extends AbstractLoadBalancerRule<T>
 
     public RoundRobinRule() {
         nextServerCyclicCounter = new AtomicInteger(0);
-
     }
 
     @Override
@@ -40,14 +39,10 @@ public class RoundRobinRule<T extends INode> extends AbstractLoadBalancerRule<T>
                 continue;
             }
 
-            // 节点是否可用
-            if (node.isAlive()) {
-                return node;
-            }
-            node = null;
+            return node;
         }
 
-        return node;
+        return null;
     }
 
     /**

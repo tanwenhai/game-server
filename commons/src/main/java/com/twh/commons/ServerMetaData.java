@@ -1,9 +1,7 @@
 package com.twh.commons;
 
 import com.google.common.base.Charsets;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * @author tanwenhai@bilibili.com
@@ -11,6 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ServerMetaData {
     private ServerType serverType;
 

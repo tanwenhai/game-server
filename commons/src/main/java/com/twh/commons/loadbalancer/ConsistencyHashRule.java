@@ -1,5 +1,6 @@
 package com.twh.commons.loadbalancer;
 
+import com.twh.commons.ServerMetaData;
 import io.netty.channel.Channel;
 
 import java.nio.charset.Charset;
@@ -9,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 /**
  * 一致性hash策略
@@ -150,11 +152,11 @@ public class ConsistencyHashRule<T extends INode> extends AbstractLoadBalancerRu
         }
 
         @Override
-        public Channel channel() {
-            return parent.channel();
+        public Channel channel(Function<ServerMetaData, Channel> function) {
+            return parent.channel(function);
         }
 
-        public INode getParent() {
+        INode getParent() {
             return parent;
         }
     }
