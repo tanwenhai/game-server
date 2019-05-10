@@ -7,8 +7,18 @@ public enum ServerType {
     /**
      * 房间服
      */
-    ROOM((short)1),
-    MATCH((short)2),
+    ROOM((short)1) {
+        @Override
+        public boolean test(int cmd) {
+            return (cmd & 0xF1) == cmd;
+        }
+    },
+    MATCH((short)2) {
+        @Override
+        public boolean test(int cmd) {
+            return (cmd & 0xF2) == cmd;
+        }
+    },
     ;
 
     final short value;
@@ -26,6 +36,8 @@ public enum ServerType {
 
         throw new IllegalArgumentException("illegal argument " + i);
     }
+
+    public abstract boolean test(int cmd);
 
     public short getValue() {
         return value;
