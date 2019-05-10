@@ -1,5 +1,10 @@
 package com.twh.commons.loadbalancer;
 
+import com.twh.commons.ServerMetaData;
+import io.netty.channel.Channel;
+
+import java.util.function.Function;
+
 /**
  * @author tanwenhai@bilibili.com
  */
@@ -15,4 +20,11 @@ public interface INode {
      * @return
      */
     String name();
+
+    /**
+     * 获取或者建立一个连接到node的channel
+     * @param function
+     * @return
+     */
+    Channel channel(Function<ServerMetaData, Channel> function);
 }

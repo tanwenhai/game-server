@@ -1,6 +1,7 @@
 package com.twh.commons.loadbalancer;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author tanwenhai@bilibili.com
@@ -8,9 +9,15 @@ import java.util.List;
 public class BaseLoadBalancer<T extends INode> implements ILoadBalancer<T> {
     IRule<T> rule;
 
+    CopyOnWriteArrayList<T> servers;
+
+    public BaseLoadBalancer(IRule<T> rule) {
+        this.rule = rule;
+    }
+
     @Override
     public void addServers(List<T> newServers) {
-
+        servers.addAll(newServers);
     }
 
     @Override
@@ -20,7 +27,7 @@ public class BaseLoadBalancer<T extends INode> implements ILoadBalancer<T> {
 
     @Override
     public List<T> getAllNodes() {
-        return null;
+        return servers.subList(0, servers.size());
     }
 
     @Override

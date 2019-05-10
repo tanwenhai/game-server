@@ -1,5 +1,7 @@
 package com.twh.gamegate
 
+import com.twh.commons.loadbalancer.ILoadBalancer
+import com.twh.commons.loadbalancer.INode
 import com.twh.core.GameServer
 import com.twh.core.configuration.NettyServerProperties
 import com.twh.core.configuration.NettySocketOptionProperties
@@ -35,9 +37,12 @@ class GameGateApplication: ApplicationRunner {
     @Autowired
     lateinit var connectionInitializer: ConnectionInitializer
 
+    @Autowired
+    lateinit var lb: ILoadBalancer<INode>
+
     @Throws
     override fun run(args: ApplicationArguments) {
-        ServerListener(zookeeperOption).updateServerList()
+        ServerListener(zookeeperOption, lb).updateServerList()
         try {
             GameServer(nettySocketOptionProperties, serverProperties, bossGroup, workGroup, connectionInitializer).start()
         } catch (e: Exception) {

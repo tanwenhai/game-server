@@ -1,6 +1,9 @@
 package com.twh.gamegate.bootstrap
 
 import com.twh.commons.ServerType
+import com.twh.commons.loadbalancer.BaseLoadBalancer
+import com.twh.commons.loadbalancer.ILoadBalancer
+import com.twh.commons.loadbalancer.INode
 import io.netty.bootstrap.Bootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.channel.*
@@ -9,12 +12,12 @@ import org.slf4j.LoggerFactory
 /**
  * 消息转发
  * <pre>
- * +-----+-----+-----+
- * | magic:2 | cmd:4 | len:4 | data |
- * +-----+-----+-----+
+ * +-----+-----+-----+-----+-----+-----+
+ * | magic:2 | cmd:4 |len:4|    data   |
+ * +-----+-----+-----+-----+-----+-----+
  * </pre>
  */
-class ProxyFrontendHandler : SimpleChannelInboundHandler<ByteBuf>() {
+class ProxyFrontendHandler(private val lb: ILoadBalancer<INode>) : SimpleChannelInboundHandler<ByteBuf>() {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     private val serverChannelMap = HashMap<ServerType, ChannelFuture>()
@@ -61,33 +64,33 @@ class ProxyFrontendHandler : SimpleChannelInboundHandler<ByteBuf>() {
     }
 
     private fun forward2server(serverType: ServerType, ctx: ChannelHandlerContext, msg: ByteBuf) {
-        // 根据serverType获取一个连接并把消息转发过去
-        backendChannel(serverType, ctx.channel()).addListener{ conn ->
-            if (conn is ChannelFuture && conn.isSuccess) {
-                conn.channel().writeAndFlush(msg).addListener { future ->
-                    if (future.isSuccess) {
-                        // 转发完了，继续读取下一个要转发的消息
-                        log.debug("forward to backend done next read client msg")
-                        ctx.read()
-                    } else {
-                        // TODO 失败了
-                        log.warn("forward to backend({}) fail", conn.channel().remoteAddress())
-                    }
-                }
-            }
+        val node = lb.chooseNode(serverType)
+        if (node == null) {
+            // TODO 根据serverType没有找到可用的后端服务 发送一个响应告知客户端
+            ctx.read()
+            return
         }
-    }
 
-    private fun backendChannel(serverType: ServerType, inboundChannel: Channel): ChannelFuture {
-        return serverChannelMap.getOrPut(serverType) {
+        node.channel {metaData ->
             val b = Bootstrap()
-            b.group(inboundChannel.eventLoop())
-                    .channel(inboundChannel::class.java)
-                    .handler(ProxyBackendHandler(inboundChannel))
+            b.group(ctx.channel().eventLoop())
+                    .channel(ctx.channel()::class.java)
+                    .handler(ProxyBackendHandler(ctx.channel()))
                     .option(ChannelOption.AUTO_READ, false)
 
             // 建立到后端的服务器
-            b.connect("127.0.0.1", 8888)
+            b.connect(metaData.ip, metaData.port).channel()
+        }.writeAndFlush(msg).addListener {
+            future ->
+            if (future.isSuccess) {
+                // 转发完了，继续读取下一个要转发的消息
+                log.debug("转发至后端服务完成，继续读取消息")
+                ctx.read()
+            } else {
+                // 失败了， 将失败节点移除重试下一个节点
+                lb.markServerDown(node)
+                forward2server(serverType, ctx, msg)
+            }
         }
     }
 }

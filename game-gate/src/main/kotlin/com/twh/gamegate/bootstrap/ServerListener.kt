@@ -1,15 +1,21 @@
 package com.twh.gamegate.bootstrap
 
+import com.twh.commons.JsonUtils
+import com.twh.commons.ServerMetaData
+import com.twh.commons.loadbalancer.*
 import com.twh.core.configuration.ZookeeperOption
+import io.netty.bootstrap.Bootstrap
+import io.netty.channel.ChannelOption
 import org.apache.zookeeper.CreateMode
 import org.apache.zookeeper.Watcher
 import org.apache.zookeeper.ZooDefs
 import org.apache.zookeeper.ZooKeeper
+import java.util.*
 
 /**
  * 服务器监听
  */
-class ServerListener(private val option: ZookeeperOption) {
+class ServerListener(private val option: ZookeeperOption, val lb: ILoadBalancer<INode>) {
 
     private val zkCli: ZooKeeper = ZooKeeper(option.connection, 5000) {}
 
@@ -44,7 +50,9 @@ class ServerListener(private val option: ZookeeperOption) {
         // 获取节点数据
         for (node in nodes) {
             val bytes = zkCli.getData("$rootPath/$node", false, null)
-            println(String(bytes))
+            val serverMetaData = JsonUtils.copyInstance().readValue(bytes, ServerMetaData::class.java)
+
+            lb.addServers(listOf(ServerNode(serverMetaData)))
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.twh.gamegate.bootstrap
 
+import com.twh.commons.loadbalancer.ILoadBalancer
+import com.twh.commons.loadbalancer.INode
 import com.twh.core.configuration.NettyServerProperties
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
@@ -13,6 +15,9 @@ class ConnectionInitializer : ChannelInitializer<SocketChannel>() {
     @Autowired
     lateinit var serverProperties: NettyServerProperties
 
+    @Autowired
+    lateinit var lb: ILoadBalancer<INode>
+
     override fun initChannel(ch: SocketChannel) {
         if (serverProperties.ssl) {
             val ssc = SelfSignedCertificate()
@@ -20,7 +25,7 @@ class ConnectionInitializer : ChannelInitializer<SocketChannel>() {
             // tls layer
             ch.pipeline().addFirst(sslCtx.newHandler(ch.alloc()))
         }
-        ch.pipeline().addLast(ProxyFrontendHandler())
+        ch.pipeline().addLast(ProxyFrontendHandler(lb))
     }
 }
 

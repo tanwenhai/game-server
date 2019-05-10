@@ -1,5 +1,7 @@
 package com.twh.commons.loadbalancer;
 
+import io.netty.channel.Channel;
+
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -145,6 +147,11 @@ public class ConsistencyHashRule<T extends INode> extends AbstractLoadBalancerRu
         @Override
         public String name() {
             return parent.name() + "-" + subIndex;
+        }
+
+        @Override
+        public Channel channel() {
+            return parent.channel();
         }
 
         public INode getParent() {
