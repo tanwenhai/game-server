@@ -28,7 +28,7 @@ public class ServerNode implements INode {
     }
 
     @Override
-    public Channel channel(Function<ServerMetaData, Channel> function) {
+    public Channel newChannel(Function<ServerMetaData, Channel> function) {
         if (channel == null) {
             synchronized (this) {
                 channel = function.apply(metaData);

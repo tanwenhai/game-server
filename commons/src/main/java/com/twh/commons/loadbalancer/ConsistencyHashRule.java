@@ -152,8 +152,8 @@ public class ConsistencyHashRule<T extends INode> extends AbstractLoadBalancerRu
         }
 
         @Override
-        public Channel channel(Function<ServerMetaData, Channel> function) {
-            return parent.channel(function);
+        public Channel newChannel(Function<ServerMetaData, Channel> function) {
+            return parent.newChannel(function);
         }
 
         INode getParent() {

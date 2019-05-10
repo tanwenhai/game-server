@@ -1,11 +1,8 @@
-import com.twh.commons.ServerType
 import io.netty.buffer.Unpooled
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
-import io.vertx.core.net.NetSocket
-import io.vertx.kotlin.core.net.netClientOptionsOf
 
 class ClientTests : AbstractVerticle() {
     override fun start(startFuture: Future<Void>) {
@@ -23,7 +20,8 @@ class ClientTests : AbstractVerticle() {
                 socket.write(Buffer.buffer(buf))
                 socket.handler {buffer->
                     print("recv $buffer")
-
+                    buf.setInt(3, 0xF2 and 123)
+                    socket.write(Buffer.buffer(buf))
                 }
             } else {
                 startFuture.fail(res.cause())

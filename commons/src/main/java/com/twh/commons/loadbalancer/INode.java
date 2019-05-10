@@ -22,9 +22,9 @@ public interface INode {
     String name();
 
     /**
-     * 获取或者建立一个连接到node的channel
+     * 建立一个连接到node的channel
      * @param function
      * @return
      */
-    Channel channel(Function<ServerMetaData, Channel> function);
+    Channel newChannel(Function<ServerMetaData, Channel> function);
 }

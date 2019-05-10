@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory
 class ProxyFrontendHandler(private val lb: ILoadBalancer<INode>) : SimpleChannelInboundHandler<ByteBuf>() {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    private val serverChannelMap = HashMap<ServerType, ChannelFuture>()
+    private val serverChannelMap = HashMap<ServerType, INode>()
 
     override fun channelActive(ctx: ChannelHandlerContext) {
         log.debug("客户端建立连接 {}", ctx.channel().remoteAddress())
@@ -65,14 +65,35 @@ class ProxyFrontendHandler(private val lb: ILoadBalancer<INode>) : SimpleChannel
     }
 
     private fun forward2server(serverType: ServerType, ctx: ChannelHandlerContext, msg: ByteBuf) {
-        val node = lb.chooseNode(serverType)
-        if (node == null) {
-            // TODO 根据serverType没有找到可用的后端服务 发送一个响应告知客户端
-            ctx.read()
-            return
+        if (!serverChannelMap.contains(serverType)) {
+            val node = lb.chooseNode(serverType)
+            if (node == null) {
+                // TODO 根据serverType没有找到可用的后端服务 发送一个响应告知客户端
+                ctx.read()
+                return
+            }
+
         }
 
-        node.channel {metaData ->
+        val listener = ChannelFutureListener {
+            if (it.isSuccess) {
+                it.channel().writeAndFlush(msg.copy()).addListener {
+                    future ->
+                    if (future.isSuccess) {
+                        // 转发完了，继续读取下一个要转发的消息
+                        log.debug("转发至后端服务完成，继续读取消息")
+                        ctx.read()
+                    } else {
+                        // 失败了， 将失败节点移除重试下一个节点
+                        log.error("转发至后端服务失败", future.cause())
+                        lb.markServerDown(node)
+                        forward2server(serverType, ctx, msg)
+                    }
+                }
+            }
+        }
+
+        node.newChannel { metaData ->
             val b = Bootstrap()
             b.group(ctx.channel().eventLoop())
                     .channel(ctx.channel()::class.java)
@@ -80,19 +101,32 @@ class ProxyFrontendHandler(private val lb: ILoadBalancer<INode>) : SimpleChannel
                     .option(ChannelOption.AUTO_READ, false)
 
             // 建立到后端的服务器
-            b.connect(metaData.ip, metaData.port).channel()
-        }.writeAndFlush(msg.copy()).addListener {
-            future ->
-            if (future.isSuccess) {
-                // 转发完了，继续读取下一个要转发的消息
-                log.debug("转发至后端服务完成，继续读取消息")
-                ctx.read()
-            } else {
-                // 失败了， 将失败节点移除重试下一个节点
-                log.error("转发至后端服务失败", future.cause())
-                lb.markServerDown(node)
-                forward2server(serverType, ctx, msg)
-            }
+            b.connect(metaData.ip, metaData.port).addListener (listener).channel()
         }
+
+        val serverChannel = node.channel {metaData ->
+            val b = Bootstrap()
+            b.group(ctx.channel().eventLoop())
+                    .channel(ctx.channel()::class.java)
+                    .handler(ProxyBackendHandler(ctx.channel()))
+                    .option(ChannelOption.AUTO_READ, false)
+
+            // 建立到后端的服务器
+            b.connect(metaData.ip, metaData.port).addListener (listener).channel()
+        }
+
+        if (serverChannel.isOpen && serverChannel.isActive) {
+            serverChannel.newSucceededFuture().addListener(listener)
+        }
+    }
+
+    private fun selectNode(serverType: ServerType): INode? {
+        return serverChannelMap.getOrPut(serverType, {
+            val node = lb.chooseNode(serverType)
+            if (node == null) {
+                lb.markServerDown(node)
+            }
+            node
+        })
     }
 }
