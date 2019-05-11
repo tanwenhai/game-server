@@ -7,7 +7,9 @@ public enum ServerType {
     /**
      * 房间服
      */
-    ROOM((short)1);
+    ROOM((short)1),
+    MATCH((short)2),
+    ;
 
     final short value;
 

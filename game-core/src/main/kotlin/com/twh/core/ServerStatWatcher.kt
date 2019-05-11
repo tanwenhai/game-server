@@ -14,7 +14,7 @@ import org.springframework.boot.ApplicationRunner
 /**
  * todo 服务状态维护
  */
-class ServerListener : ApplicationRunner {
+class ServerStatWatcher : ApplicationRunner {
 
     @Autowired
     lateinit var zookeeperOption: ZookeeperOption

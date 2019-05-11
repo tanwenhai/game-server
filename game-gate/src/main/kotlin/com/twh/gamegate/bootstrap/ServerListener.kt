@@ -10,6 +10,7 @@ import org.apache.zookeeper.ZooKeeper
  * 服务器监听
  */
 class ServerListener(private val option: ZookeeperOption) {
+
     private val zkCli: ZooKeeper = ZooKeeper(option.connection, 5000) {}
 
     /**
