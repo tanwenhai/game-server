@@ -11,7 +11,7 @@ class NettyServerProperties {
 
     var name: String = "default"
 
-    val serverType: ServerType? = null
+    var serverType: ServerType? = null
 
     /**
      * 服务器端口
