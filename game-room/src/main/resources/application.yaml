@@ -1,5 +1,5 @@
 zookeeper:
-  connection: zoo1:2181,zoo2:2182,zoo3:2183
+  connection: zoo1:2181,zoo2:2181,zoo3:2181
   root-path: /game-server
 
 netty:
@@ -7,7 +7,7 @@ netty:
     name: room-server
     server-type: ROOM
     ssl: false
-    port: 8888
+    port: 9000
     channel: io.netty.channel.socket.nio.NioServerSocketChannel
     boss-group:
       eventLoopGroup: io.netty.channel.nio.NioEventLoopGroup

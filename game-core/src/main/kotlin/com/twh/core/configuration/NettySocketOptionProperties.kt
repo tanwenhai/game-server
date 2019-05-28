@@ -3,7 +3,7 @@ package com.twh.core.configuration
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "netty.server.socket")
-class NettySocketOptionProperties {
+open class NettySocketOptionProperties {
     /**
      * 周期性测试连接是否存活
      */

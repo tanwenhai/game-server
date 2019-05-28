@@ -1,7 +1,6 @@
 package com.twh.room.bootstrap
 
 import io.netty.buffer.ByteBuf
-import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
 import org.slf4j.LoggerFactory
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component
 /**
  * 协议转发
  */
-@ChannelHandler.Sharable
 @Component
 class EchoHandler : SimpleChannelInboundHandler<ByteBuf>() {
     private val log = LoggerFactory.getLogger(this.javaClass)

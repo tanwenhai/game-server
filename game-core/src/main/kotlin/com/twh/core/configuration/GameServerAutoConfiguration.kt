@@ -17,14 +17,14 @@ import java.net.Socket
 
 @Configuration
 @EnableConfigurationProperties(NettyServerProperties::class, NettySocketOptionProperties::class, ZookeeperOption::class)
-class GameServerAutoConfiguration {
+open class GameServerAutoConfiguration {
 
     @Autowired
     lateinit var nettyServerProperties: NettyServerProperties
 
     @ConditionalOnMissingBean(EventLoopGroup::class, name = ["bossGroup"])
     @Bean(name = ["bossGroup"], destroyMethod = "shutdownGracefully")
-    fun bossGroup(): EventLoopGroup {
+    open fun bossGroup(): EventLoopGroup {
         try {
             return nettyServerProperties.bossGroup.newInstance()
         } catch (e: Exception) {
@@ -35,7 +35,7 @@ class GameServerAutoConfiguration {
 
     @ConditionalOnMissingBean(EventLoopGroup::class, name = ["workGroup"])
     @Bean(name = ["workGroup"], destroyMethod = "shutdownGracefully")
-    fun workGroup(): EventLoopGroup {
+    open fun workGroup(): EventLoopGroup {
         try {
             return nettyServerProperties.workGroup.newInstance()
         } catch (e: Exception) {
@@ -45,21 +45,21 @@ class GameServerAutoConfiguration {
 
     @ConditionalOnMissingBean(ZookeeperOption::class)
     @Bean
-    fun zookeeperOption() = ZookeeperOption()
+    open fun zookeeperOption() = ZookeeperOption()
 
     @ConditionalOnMissingBean(GameServerBootstrap::class)
     @Bean
-    fun gameServerBootstrap() = GameServerBootstrap()
+    open fun gameServerBootstrap() = GameServerBootstrap()
 
     @Bean
-    fun serverListener() = ServerStatWatcher()
+    open fun serverListener() = ServerStatWatcher()
 
     /**
      * 默认丢弃所有数据
      */
     @ConditionalOnMissingBean(ChannelInitializer::class)
     @Bean
-    fun connectionInitializer(): ChannelInitializer<SocketChannel> {
+    open fun connectionInitializer(): ChannelInitializer<SocketChannel> {
         return object : ChannelInitializer<SocketChannel>() {
             override fun initChannel(ch: SocketChannel) {
                 ch.pipeline().addLast(object: SimpleChannelInboundHandler<Any>() {

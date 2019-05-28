@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 import java.net.InetAddress
 
 @ConfigurationProperties(prefix = "netty.server")
-class NettyServerProperties {
+open class NettyServerProperties {
 
     var name: String = "default"
 
