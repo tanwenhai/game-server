@@ -7,23 +7,12 @@ import com.twh.core.configuration.ZookeeperOption
 import org.apache.zookeeper.CreateMode
 import org.apache.zookeeper.ZooDefs
 import org.apache.zookeeper.ZooKeeper
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.ApplicationArguments
-import org.springframework.boot.ApplicationRunner
 
 /**
  * todo 服务状态维护
  */
-class ServerStatWatcher : ApplicationRunner {
-
-    @Autowired
-    lateinit var zookeeperOption: ZookeeperOption
-
-
-    @Autowired
-    lateinit var serverProperties: NettyServerProperties
-
-    override fun run(args: ApplicationArguments) {
+class ServerStatWatcher {
+    fun watch(zookeeperOption: ZookeeperOption, serverProperties: NettyServerProperties) {
         val serverName = serverProperties.name
 
         if (serverProperties.serverType !== null && serverProperties.name.isNotEmpty()) {

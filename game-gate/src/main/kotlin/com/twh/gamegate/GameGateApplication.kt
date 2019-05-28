@@ -44,7 +44,7 @@ class GameGateApplication: ApplicationRunner {
     override fun run(args: ApplicationArguments) {
         ServerListener(zookeeperOption, lb).updateServerList()
         try {
-            GameServer(nettySocketOptionProperties, serverProperties, bossGroup, workGroup, connectionInitializer).start()
+            GameServer(zookeeperOption, nettySocketOptionProperties, serverProperties, bossGroup, workGroup, connectionInitializer).start()
         } catch (e: Exception) {
             throw ApplicationContextException(e.message!!, e)
         }

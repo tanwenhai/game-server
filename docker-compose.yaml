@@ -48,6 +48,10 @@ services:
     restart: always
     hostname: gate1
     container_name: gate1
+    ports:
+      - 9001:9000
+    environment:
+      NETTY_SERVER_ADDRESS: gate1
     networks:
       server:
   room1:
@@ -55,6 +59,10 @@ services:
     restart: always
     hostname: room1
     container_name: room1
+    ports:
+      - 9002:9000
+    environment:
+      NETTY_SERVER_ADDRESS: room1
     networks:
       server:
 networks:

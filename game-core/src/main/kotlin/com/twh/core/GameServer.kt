@@ -2,6 +2,7 @@ package com.twh.core
 
 import com.twh.core.configuration.NettyServerProperties
 import com.twh.core.configuration.NettySocketOptionProperties
+import com.twh.core.configuration.ZookeeperOption
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.PooledByteBufAllocator
 import io.netty.channel.Channel
@@ -15,7 +16,8 @@ import io.netty.handler.logging.LogLevel
 import io.netty.handler.logging.LoggingHandler
 import org.slf4j.LoggerFactory
 
-class GameServer<C : Channel>(private val nettySocketOptionProperties: NettySocketOptionProperties,
+class GameServer<C : Channel>(private val zookeeperOption: ZookeeperOption,
+                              private val nettySocketOptionProperties: NettySocketOptionProperties,
                               private val serverProperties: NettyServerProperties,
                               private val bossGroup: EventLoopGroup,
                               private val workGroup: EventLoopGroup,
@@ -33,7 +35,7 @@ class GameServer<C : Channel>(private val nettySocketOptionProperties: NettySock
         b.option(ChannelOption.SO_BACKLOG, nettySocketOptionProperties.backlog)
         b.option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
 
-        if (log.isDebugEnabled()) {
+        if (log.isDebugEnabled) {
             b.handler(LoggingHandler(LogLevel.DEBUG))
         }
 
@@ -53,6 +55,12 @@ class GameServer<C : Channel>(private val nettySocketOptionProperties: NettySock
         }
         val f = b.bind(serverProperties.address, serverProperties.port).sync()
         log.info("started and listening for connections on" + f.channel().localAddress())
+        f.addListener {
+            if (it.isSuccess) {
+                // 註冊
+                ServerStatWatcher().watch(zookeeperOption, serverProperties)
+            }
+        }
         f.channel().closeFuture().sync()
     }
 }

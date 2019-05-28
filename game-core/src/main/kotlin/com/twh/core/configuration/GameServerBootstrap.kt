@@ -4,6 +4,7 @@ import com.twh.commons.ServerMetaData
 import com.twh.commons.ServerStatus
 import com.twh.commons.ServerType
 import com.twh.core.GameServer
+import com.twh.core.ServerStatWatcher
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.socket.SocketChannel
@@ -35,18 +36,9 @@ open class GameServerBootstrap: ApplicationRunner {
     lateinit var zookeeperOption: ZookeeperOption
 
     override fun run(args: ApplicationArguments?) {
-        val zkCli = ZooKeeper(zookeeperOption.connection, 5000) {}
-        val data = ServerMetaData.builder()
-                .serverType(ServerType.ROOM)
-                .ip("127.0.0.1")
-                .port(8888)
-                .serverStatus(ServerStatus.NORMAL)
-                .build()
-                .toJsonByteArray()
-        zkCli.create("${zookeeperOption.rootPath}/${serverProperties.name}", data,
-                ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL)
         try {
             GameServer(
+                zookeeperOption,
                 nettySocketOptionProperties,
                 serverProperties,
                 bossGroup,

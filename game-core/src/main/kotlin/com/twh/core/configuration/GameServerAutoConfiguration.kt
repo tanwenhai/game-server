@@ -51,8 +51,8 @@ open class GameServerAutoConfiguration {
     @Bean
     open fun gameServerBootstrap() = GameServerBootstrap()
 
-    @Bean
-    open fun serverListener() = ServerStatWatcher()
+//    @Bean
+//    open fun serverListener() = ServerStatWatcher()
 
     /**
      * 默认丢弃所有数据

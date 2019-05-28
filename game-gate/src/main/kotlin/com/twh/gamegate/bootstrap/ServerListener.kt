@@ -10,12 +10,15 @@ import org.apache.zookeeper.CreateMode
 import org.apache.zookeeper.Watcher
 import org.apache.zookeeper.ZooDefs
 import org.apache.zookeeper.ZooKeeper
+import org.slf4j.LoggerFactory
 import java.util.*
 
 /**
  * 服务器监听
  */
-class ServerListener(private val option: ZookeeperOption, val lb: ILoadBalancer<INode>) {
+class ServerListener(private val option: ZookeeperOption, private val lb: ILoadBalancer<INode>) {
+
+    private val log = LoggerFactory.getLogger(this::class.java)
 
     private val zkCli: ZooKeeper = ZooKeeper(option.connection, 5000) {}
 
@@ -51,6 +54,7 @@ class ServerListener(private val option: ZookeeperOption, val lb: ILoadBalancer<
         for (node in nodes) {
             val bytes = zkCli.getData("$rootPath/$node", false, null)
             val serverMetaData = JsonUtils.copyInstance().readValue(bytes, ServerMetaData::class.java)
+            log.debug("node data {}", serverMetaData)
 
             lb.addServers(listOf(ServerNode(serverMetaData)))
         }
