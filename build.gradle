@@ -12,34 +12,27 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.30"
         classpath "org.jetbrains.kotlin:kotlin-allopen:1.3.21"
         classpath "io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE"
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
         classpath "io.franzbecker:gradle-lombok:1.14"
         classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.0'
     }
 }
 
 subprojects {
+    apply plugin: 'docker'
     apply plugin: 'idea'
     apply plugin: 'java'
-    apply plugin: 'kotlin'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'org.jetbrains.kotlin.jvm'
-    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
-    apply plugin: 'io.spring.dependency-management'
 
-    group 'com.twh'
-    version '1.0-SNAPSHOT'
+    sourceCompatibility = '1.8'
 
-    compileKotlin {
-        kotlinOptions {
-            freeCompilerArgs = ['-Xjsr305=strict']
-            jvmTarget = '1.8'
-        }
-    }
-
-    compileTestKotlin {
-        kotlinOptions {
-            freeCompilerArgs = ['-Xjsr305=strict']
-            jvmTarget = '1.8'
+    task buildDocker(type: Docker, dependsOn: build) {
+        applicationName = jar.archiveBaseName
+        dockerfile = file('Dockerfile')
+        doFirst {
+            copy {
+                from jar
+                into "${stageDir}/target"
+            }
         }
     }
 
@@ -52,11 +45,10 @@ subprojects {
     }
 }
 
+
 project(":commons") {
     apply plugin: "io.franzbecker.gradle-lombok"
     apply plugin: 'com.google.osdetector'
-
-    sourceCompatibility = '1.8'
 
     dependencies {
         // https://mvnrepository.com/artifact/org.apache.zookeeper/zookeeper
@@ -92,8 +84,28 @@ project(":commons") {
 }
 
 project(":game-core") {
+    apply plugin: 'kotlin'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+
+    group 'com.twh'
+    version '1.0-SNAPSHOT'
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
     dependencies {
-        compile 'org.springframework.boot:spring-boot-starter'
+        compile 'org.springframework.boot:spring-boot-starter:2.1.3.RELEASE'
         compile 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
         compile 'org.jetbrains.kotlin:kotlin-reflect'
         compile project(":commons")
@@ -101,32 +113,153 @@ project(":game-core") {
         compile ('io.vertx:vertx-core:3.7.0') {
             exclude group: 'io.netty'
         }
-        compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+        compileOnly "org.springframework.boot:spring-boot-configuration-processor:2.1.3.RELEASE"
         testCompile group: 'junit', name: 'junit', version: '4.12'
-        testCompile 'org.springframework.boot:spring-boot-starter-test'
+        testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.3.RELEASE'
     }
+
 }
 
 project(":game-gate") {
+    apply plugin: 'kotlin'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+    apply plugin: 'io.spring.dependency-management'
+
+    group 'com.twh'
+    version '1.0-SNAPSHOT'
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    repositories {
+        maven {
+            name "aliyunmaven"
+            url "https://maven.aliyun.com/repository/central/"
+        }
+        mavenLocal()
+    }
+
     dependencies {
         implementation project(":game-core")
     }
 }
 
 project(":game-room") {
+    apply plugin: 'kotlin'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'docker'
+
+    group 'com.twh'
+    version '1.0-SNAPSHOT'
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    repositories {
+        maven {
+            name "aliyunmaven"
+            url "https://maven.aliyun.com/repository/central/"
+        }
+        mavenLocal()
+    }
     dependencies {
         implementation project(":game-core")
     }
 }
 
 project(":game-match") {
+    apply plugin: 'kotlin'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'docker'
+
+    group 'com.twh'
+    version '1.0-SNAPSHOT'
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    repositories {
+        maven {
+            name "aliyunmaven"
+            url "https://maven.aliyun.com/repository/central/"
+        }
+        mavenLocal()
+    }
     dependencies {
         implementation project(":game-core")
     }
 }
 
 project(":net-client") {
+    apply plugin: 'kotlin'
     apply plugin: 'org.jetbrains.kotlin.jvm'
+    apply plugin: 'org.jetbrains.kotlin.plugin.spring'
+
+    group 'com.twh'
+    version '1.0-SNAPSHOT'
+
+    compileKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    compileTestKotlin {
+        kotlinOptions {
+            freeCompilerArgs = ['-Xjsr305=strict']
+            jvmTarget = '1.8'
+        }
+    }
+
+    repositories {
+        maven {
+            name "aliyunmaven"
+            url "https://maven.aliyun.com/repository/central/"
+        }
+        mavenLocal()
+    }
 
     dependencies {
         implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
