@@ -86,38 +86,38 @@ class ProxyFrontendHandler(private val lb: ILoadBalancer<INode>) : SimpleChannel
                     } else {
                         // 失败了， 将失败节点移除重试下一个节点
                         log.error("转发至后端服务失败", future.cause())
-                        lb.markServerDown(node)
+//                        lb.markServerDown(node)
                         forward2server(serverType, ctx, msg)
                     }
                 }
             }
         }
 
-        node.newChannel { metaData ->
-            val b = Bootstrap()
-            b.group(ctx.channel().eventLoop())
-                    .channel(ctx.channel()::class.java)
-                    .handler(ProxyBackendHandler(ctx.channel()))
-                    .option(ChannelOption.AUTO_READ, false)
+//        node.newChannel { metaData ->
+//            val b = Bootstrap()
+//            b.group(ctx.channel().eventLoop())
+//                    .channel(ctx.channel()::class.java)
+//                    .handler(ProxyBackendHandler(ctx.channel()))
+//                    .option(ChannelOption.AUTO_READ, false)
+//
+//            // 建立到后端的服务器
+//            b.connect(metaData.ip, metaData.port).addListener (listener).channel()
+//        }
+//
+//        val serverChannel = node.channel {metaData ->
+//            val b = Bootstrap()
+//            b.group(ctx.channel().eventLoop())
+//                    .channel(ctx.channel()::class.java)
+//                    .handler(ProxyBackendHandler(ctx.channel()))
+//                    .option(ChannelOption.AUTO_READ, false)
+//
+//            // 建立到后端的服务器
+//            b.connect(metaData.ip, metaData.port).addListener (listener).channel()
+//        }
 
-            // 建立到后端的服务器
-            b.connect(metaData.ip, metaData.port).addListener (listener).channel()
-        }
-
-        val serverChannel = node.channel {metaData ->
-            val b = Bootstrap()
-            b.group(ctx.channel().eventLoop())
-                    .channel(ctx.channel()::class.java)
-                    .handler(ProxyBackendHandler(ctx.channel()))
-                    .option(ChannelOption.AUTO_READ, false)
-
-            // 建立到后端的服务器
-            b.connect(metaData.ip, metaData.port).addListener (listener).channel()
-        }
-
-        if (serverChannel.isOpen && serverChannel.isActive) {
-            serverChannel.newSucceededFuture().addListener(listener)
-        }
+//        if (serverChannel.isOpen && serverChannel.isActive) {
+//            serverChannel.newSucceededFuture().addListener(listener)
+//        }
     }
 
     private fun selectNode(serverType: ServerType): INode? {
