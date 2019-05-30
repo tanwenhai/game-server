@@ -4,14 +4,11 @@ import com.twh.commons.JsonUtils
 import com.twh.commons.ServerMetaData
 import com.twh.commons.loadbalancer.*
 import com.twh.core.configuration.ZookeeperOption
-import io.netty.bootstrap.Bootstrap
-import io.netty.channel.ChannelOption
 import org.apache.zookeeper.CreateMode
 import org.apache.zookeeper.Watcher
 import org.apache.zookeeper.ZooDefs
 import org.apache.zookeeper.ZooKeeper
 import org.slf4j.LoggerFactory
-import java.util.*
 
 /**
  * 服务器监听

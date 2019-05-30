@@ -3,6 +3,7 @@ package com.twh.gamegate.bootstrap
 import com.twh.commons.loadbalancer.ILoadBalancer
 import com.twh.commons.loadbalancer.INode
 import com.twh.core.configuration.NettyServerProperties
+import com.twh.gamegate.codec.ClientMsgDecoder
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
 import io.netty.handler.ssl.SslContextBuilder
@@ -25,6 +26,7 @@ class ConnectionInitializer : ChannelInitializer<SocketChannel>() {
             // tls layer
             ch.pipeline().addFirst(sslCtx.newHandler(ch.alloc()))
         }
+        ch.pipeline().addLast(ClientMsgDecoder())
         ch.pipeline().addLast(ProxyFrontendHandler(lb))
     }
 }

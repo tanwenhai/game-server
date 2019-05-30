@@ -17,6 +17,11 @@ class ServerStatWatcher {
 
         if (serverProperties.serverType !== null && serverProperties.name.isNotEmpty()) {
             val zkCli = ZooKeeper(zookeeperOption.connection, 5000) {}
+
+            if (zkCli.exists(zookeeperOption.rootPath, false) == null) {
+                zkCli.create(zookeeperOption.rootPath, "".toByteArray(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT)
+            }
+
             // 服务启动向zk注册
             val serverMetaData = ServerMetaData.builder()
                     .serverType(serverProperties.serverType)
@@ -24,6 +29,7 @@ class ServerStatWatcher {
                     .ip(serverProperties.address.hostAddress)
                     .port(serverProperties.port)
                     .build()
+
             zkCli.create("${zookeeperOption.rootPath}/$serverName",
                     serverMetaData.toJsonByteArray(),
                     ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL)
