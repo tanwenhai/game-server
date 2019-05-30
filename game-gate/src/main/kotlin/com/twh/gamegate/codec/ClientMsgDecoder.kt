@@ -15,6 +15,7 @@ class ClientMsgDecoder : ByteToMessageDecoder() {
         if (magic != 0x42.toShort()) {
             // 收到一个错误的消息
             log.debug("收到一个错误消息 magic={}", magic)
+            msg.resetReaderIndex()
             ctx.close()
             return
         }
@@ -30,6 +31,7 @@ class ClientMsgDecoder : ByteToMessageDecoder() {
         if (serverType == null) {
             // 收到一个错误的消息
             log.debug("收到一个错误消息 cmd={} 没有目标服务", cmd)
+            msg.resetReaderIndex()
             ctx.close()
             return
         }
@@ -37,7 +39,7 @@ class ClientMsgDecoder : ByteToMessageDecoder() {
         val len = msg.readInt()
         if (msg.readableBytes() >= len) {
             // 至少有一个完整的消息需要转发
-            out.add(ClientMsg(cmd, len, msg.readBytes(len)))
+            out.add(ClientMsg(cmd, len, serverType, msg.readBytes(len)))
             return
         }
         msg.resetReaderIndex()

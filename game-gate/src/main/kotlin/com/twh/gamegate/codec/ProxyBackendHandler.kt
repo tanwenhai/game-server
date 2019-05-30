@@ -2,10 +2,9 @@ package com.twh.gamegate.codec
 
 import com.twh.commons.loadbalancer.INode
 import io.netty.bootstrap.Bootstrap
-import io.netty.channel.Channel
-import io.netty.channel.ChannelHandlerContext
-import io.netty.channel.ChannelInboundHandlerAdapter
-import io.netty.channel.ChannelOption
+import io.netty.channel.*
+import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.nio.NioSocketChannel
 import org.slf4j.LoggerFactory
 
 /**
@@ -20,6 +19,9 @@ class ProxyBackendHandler(private val node: INode, private val inboundChannel: C
     init {
         backendChannel = node.newChannel {
             val b = Bootstrap()
+
+//            b.group(NioEventLoopGroup(1))
+//                    .channel(NioSocketChannel::class.java)
             b.group(inboundChannel.eventLoop())
                     .channel(inboundChannel::class.java)
                     .handler(this)
@@ -36,8 +38,10 @@ class ProxyBackendHandler(private val node: INode, private val inboundChannel: C
             if (it.isSuccess) {
                 // 转发完了，继续读取下一个要转发的消息
                 inboundChannel.read()
+                log.debug("read complete next read")
             } else {
                 // TODO 失败了
+                log.error("发送出错", it.cause())
             }
         }
     }

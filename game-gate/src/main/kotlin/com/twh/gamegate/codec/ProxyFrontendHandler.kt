@@ -27,31 +27,12 @@ class ProxyFrontendHandler(private val lb: ILoadBalancer<INode>) : SimpleChannel
     }
 
     override fun channelRead0(ctx: ChannelHandlerContext, msg: ClientMsg) {
-        log.debug("收到客户端消息")
-
-        val cmd = msg.cmd
-        var serverType: ServerType? = null
-        for (value in ServerType.values()) {
-            if (value.test(cmd)) {
-                serverType = value
-                break
-            }
-        }
-
-        if (serverType == null) {
-            // 收到一个错误的消息
-            log.debug("收到一个错误消息 cmd={} 没有目标服务", cmd)
-            ctx.close()
-            return
-        }
-        forward2server(serverType, ctx, msg)
-    }
-
-    private fun forward2server(serverType: ServerType, ctx: ChannelHandlerContext, msg: ClientMsg) {
-        val node = lb.chooseNode(serverType)
+        val node = lb.chooseNode(msg.serverType)
+        // TODO 没有获取到一个可用的服务
         val streamChannel = channelMap.getOrPut(node) {
             ProxyBackendHandler(node, ctx.channel())
         }
         streamChannel.write(msg)
     }
+
 }

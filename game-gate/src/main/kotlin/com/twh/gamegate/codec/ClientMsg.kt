@@ -1,5 +1,6 @@
 package com.twh.gamegate.codec
 
+import com.twh.commons.ServerType
 import io.netty.buffer.ByteBuf
 
 /**
@@ -11,5 +12,6 @@ import io.netty.buffer.ByteBuf
 data class ClientMsg(
     val cmd: Int,
     val len: Int,
+    val serverType: ServerType,
     val data: ByteBuf
 )
