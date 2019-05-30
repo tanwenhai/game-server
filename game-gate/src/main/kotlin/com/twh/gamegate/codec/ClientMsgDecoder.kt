@@ -2,12 +2,10 @@ package com.twh.gamegate.codec
 
 import com.twh.commons.ServerType
 import io.netty.buffer.ByteBuf
-import io.netty.channel.ChannelHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.handler.codec.ByteToMessageDecoder
 import org.slf4j.LoggerFactory
 
-@ChannelHandler.Sharable
 class ClientMsgDecoder : ByteToMessageDecoder() {
     private val log = LoggerFactory.getLogger(this.javaClass)
 

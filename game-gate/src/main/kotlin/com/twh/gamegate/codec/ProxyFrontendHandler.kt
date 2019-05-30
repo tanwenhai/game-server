@@ -1,9 +1,8 @@
-package com.twh.gamegate.bootstrap
+package com.twh.gamegate.codec
 
 import com.twh.commons.ServerType
 import com.twh.commons.loadbalancer.ILoadBalancer
 import com.twh.commons.loadbalancer.INode
-import com.twh.gamegate.codec.ClientMsg
 import io.netty.channel.*
 import org.slf4j.LoggerFactory
 import java.util.concurrent.ConcurrentHashMap

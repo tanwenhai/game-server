@@ -1,7 +1,6 @@
-package com.twh.gamegate.bootstrap
+package com.twh.gamegate.codec
 
 import com.twh.commons.loadbalancer.INode
-import com.twh.gamegate.codec.ClientMsg
 import io.netty.bootstrap.Bootstrap
 import io.netty.channel.Channel
 import io.netty.channel.ChannelHandlerContext
