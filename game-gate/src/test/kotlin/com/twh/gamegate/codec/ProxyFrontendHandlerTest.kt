@@ -7,6 +7,7 @@ import com.twh.commons.loadbalancer.BaseLoadBalancer
 import com.twh.commons.loadbalancer.INode
 import com.twh.commons.loadbalancer.RoundRobinRule
 import com.twh.commons.loadbalancer.ServerNode
+import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import io.netty.channel.embedded.EmbeddedChannel
 import org.junit.Test
@@ -19,7 +20,7 @@ class ProxyFrontendHandlerTest {
     @Test
     fun channelRead0() {
         val lb = BaseLoadBalancer<INode>(RoundRobinRule<INode>())
-        val node = ServerNode(ServerMetaData(ServerType.MATCH, ServerStatus.NORMAL, "127.0.0.1", 9001))
+        val node = ServerNode(ServerMetaData(ServerType.MATCH, ServerStatus.NORMAL, "127.0.0.1", 9000))
         lb.addServers(listOf(node))
         var channel = EmbeddedChannel(
                 AuthHandler(),
@@ -37,5 +38,6 @@ class ProxyFrontendHandlerTest {
         send.writeInt(4)
         send.writeBytes("haha".toByteArray())
         channel.writeInbound(send)
+        channel.readOutbound<ByteBuf>()
     }
 }

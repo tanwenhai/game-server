@@ -167,6 +167,7 @@ project(":game-gate") {
 
     dependencies {
         implementation project(":game-core")
+        testCompile group: 'junit', name: 'junit', version: '4.12'
     }
 }
 

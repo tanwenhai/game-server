@@ -1,5 +1,6 @@
 package com.twh.room.bootstrap
 
+import com.twh.core.codec.StreamMsgCodec
 import com.twh.core.configuration.NettyServerProperties
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.socket.SocketChannel
@@ -23,6 +24,7 @@ class ConnectionInitializer : ChannelInitializer<SocketChannel>() {
             // tls layer
             ch.pipeline().addFirst(sslCtx.newHandler(ch.alloc()))
         }
+        ch.pipeline().addLast(StreamMsgCodec())
         ch.pipeline().addLast(echoHandler)
     }
 }
