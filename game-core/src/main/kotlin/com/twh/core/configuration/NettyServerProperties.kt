@@ -1,9 +1,10 @@
 package com.twh.core.configuration
 
 import com.twh.commons.ServerType
-import com.twh.core.EventLoopGroupProperties
+import io.netty.channel.ServerChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.NestedConfigurationProperty
 import java.net.InetAddress
 
 @ConfigurationProperties(prefix = "netty.server")
@@ -31,20 +32,23 @@ open class NettyServerProperties {
     /**
      * 处理业务的线程组
      */
-    var blockGroup = EventLoopGroupProperties("business")
+    @NestedConfigurationProperty
+    var blockGroup = EventLoopGroupProperties()
 
     /**
      * 处理连接的线程组
      */
-    var bossGroup = EventLoopGroupProperties("boss")
+    @NestedConfigurationProperty
+    var bossGroup = EventLoopGroupProperties()
 
     /**
      * 处理读写的线程组
      */
-    var workGroup = EventLoopGroupProperties("work")
+    @NestedConfigurationProperty
+    var workGroup = EventLoopGroupProperties()
 
     /**
      * channel 类型 windows nio/linux epool
      */
-    var channel = NioServerSocketChannel::class.java
+    var channel: Class<out ServerChannel> = NioServerSocketChannel::class.java
 }

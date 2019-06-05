@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory
  * @param node 后端服务
  * @param inboundChannel 客户端的连接
  */
+@ChannelHandler.Sharable
 class ProxyBackendHandler(private val node: INode, private val inboundChannel: Channel)  : ChannelInboundHandlerAdapter() {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
@@ -39,7 +40,7 @@ class ProxyBackendHandler(private val node: INode, private val inboundChannel: C
             b.handler(this)
                     .option(ChannelOption.AUTO_READ, false)
 
-            // 建立连接
+            // FIXME 建立连接，这里的sync会阻塞io线程
             b.connect(it.ip, it.port).sync().channel()
         }
     }
@@ -47,7 +48,7 @@ class ProxyBackendHandler(private val node: INode, private val inboundChannel: C
     fun write(msg: ClientMsg) {
         val streamId = inboundChannel.attr(STREAM_ID_KEY).get()
         val len = msg.len + 8
-        val buf = Unpooled.buffer(len + 4)
+        val buf = inboundChannel.config().allocator.ioBuffer(len + 4)
         buf.writeInt(len)
         buf.writeInt(streamId)
         buf.writeInt(msg.cmd)

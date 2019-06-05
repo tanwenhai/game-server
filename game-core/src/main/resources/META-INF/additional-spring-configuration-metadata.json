@@ -51,7 +51,7 @@
     },
     {
       "name": "netty.server.blockGroup",
-      "type": "com.twh.core.EventLoopGroupProperties",
+      "type": "com.twh.core.configuration.EventLoopGroupProperties",
       "description": "netty business event loop group .",
       "deprecation": {
         "replacement": "spring.security.filter.order",
@@ -60,7 +60,7 @@
     },
     {
       "name": "netty.server.bossGroup",
-      "type": "com.twh.core.EventLoopGroupProperties",
+      "type": "com.twh.core.configuration.EventLoopGroupProperties",
       "description": "netty listen event loop group.",
       "deprecation": {
         "replacement": "spring.security.filter.order",
@@ -69,7 +69,7 @@
     },
     {
       "name": "netty.server.workGroup",
-      "type": "com.twh.core.EventLoopGroupProperties",
+      "type": "com.twh.core.configuration.EventLoopGroupProperties",
       "description": "netty read/write event loop group.",
       "deprecation": {
         "replacement": "spring.security.filter.order",

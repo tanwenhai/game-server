@@ -5,10 +5,7 @@ import com.twh.core.configuration.NettySocketOptionProperties
 import com.twh.core.configuration.ZookeeperOption
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.PooledByteBufAllocator
-import io.netty.channel.Channel
-import io.netty.channel.ChannelInitializer
-import io.netty.channel.ChannelOption
-import io.netty.channel.EventLoopGroup
+import io.netty.channel.*
 import io.netty.channel.epoll.Epoll
 import io.netty.channel.epoll.EpollChannelOption
 import io.netty.channel.epoll.EpollServerSocketChannel
@@ -48,7 +45,9 @@ class GameServer<C : Channel>(private val zookeeperOption: ZookeeperOption,
         b.childOption(ChannelOption.SO_REUSEADDR, nettySocketOptionProperties.reuseaddr)
         b.childOption(ChannelOption.SO_RCVBUF, nettySocketOptionProperties.rcvbuf)
         b.childOption(ChannelOption.SO_SNDBUF, nettySocketOptionProperties.sndbuf)
-        b.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+        b.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator(true))
+        // 接收bytebuf
+        b.childOption(ChannelOption.RCVBUF_ALLOCATOR, AdaptiveRecvByteBufAllocator())
         // 如果是linux环境使用EpollServerSocketChannel
         if (Epoll.isAvailable() && serverProperties.channel === EpollServerSocketChannel::class.java) {
             b.childOption(EpollChannelOption.TCP_QUICKACK, true)

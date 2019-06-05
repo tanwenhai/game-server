@@ -1,7 +1,5 @@
 package com.twh.core.configuration
 
-import com.twh.core.ServerStatWatcher
-import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelInitializer
 import io.netty.channel.EventLoopGroup
@@ -13,7 +11,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContextException
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.net.Socket
 
 @Configuration
 @EnableConfigurationProperties(NettyServerProperties::class, NettySocketOptionProperties::class, ZookeeperOption::class)

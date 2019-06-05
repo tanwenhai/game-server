@@ -6,13 +6,15 @@ netty:
   server:
     ssl: false
     port: 9000
-    channel: io.netty.channel.socket.nio.NioServerSocketChannel
+    channel: io.netty.channel.epoll.EpollServerSocketChannel
     boss-group:
-      eventLoopGroup: io.netty.channel.nio.NioEventLoopGroup
+      event-loop-group: io.netty.channel.epoll.EpollEventLoopGroup
+    work-group:
+      event-loop-group: io.netty.channel.epoll.EpollEventLoopGroup
     block-group:
-      eventLoopGroup: io.netty.channel.nio.NioEventLoopGroup
+      event-loop-group: io.netty.channel.epoll.EpollEventLoopGroup
       threads: 200
-    socket:
-      keepalive: true
-      backlog: 1024
-      autoRead: false
+  socket:
+    keepalive: true
+    backlog: 1024
+    autoRead: false

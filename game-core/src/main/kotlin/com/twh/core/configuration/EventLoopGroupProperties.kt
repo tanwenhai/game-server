@@ -1,20 +1,22 @@
-package com.twh.core
+package com.twh.core.configuration
 
 import io.netty.channel.EventLoopGroup
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.util.concurrent.DefaultThreadFactory
 import java.util.concurrent.ThreadFactory
 
-class EventLoopGroupProperties(private val threadPrefix: String) {
+open class EventLoopGroupProperties {
     /**
      * @see .newInstance
      */
-    private val eventLoopGroup = NioEventLoopGroup::class.java
+    var eventLoopGroup:Class<out EventLoopGroup> = NioEventLoopGroup::class.java
 
     /**
      * 线程数
      */
-    private val threads = 0
+    var threads = 0
+
+    var threadPrefix = "io"
 
     @Throws(Exception::class)
     fun newInstance(): EventLoopGroup {
