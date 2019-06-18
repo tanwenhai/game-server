@@ -7,7 +7,7 @@ netty:
     name: room-server
     server-type: ROOM
     ssl: false
-    port: 9000
+    port: 8999
     channel: io.netty.channel.socket.nio.NioServerSocketChannel
     boss-group:
       eventLoopGroup: io.netty.channel.nio.NioEventLoopGroup

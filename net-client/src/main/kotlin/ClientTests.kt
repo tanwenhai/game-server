@@ -3,11 +3,18 @@ import io.vertx.core.AbstractVerticle
 import io.vertx.core.Future
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
+import io.vertx.core.net.NetSocket
 
 class ClientTests : AbstractVerticle() {
     override fun start(startFuture: Future<Void>) {
         val client = vertx.createNetClient()
-        client.connect(9999, "localhost") {res ->
+        Future.future<NetSocket> {res ->
+            if (res.succeeded()) {
+
+            }
+        }
+
+        client.connect(9000, "localhost") {res ->
             if (res.succeeded()) {
                 startFuture.complete()
                 println("Connected!")
