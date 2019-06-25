@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <keepAliveDuration>10 minutes</keepAliveDuration>
+        <reconnectionDelay>1 second</reconnectionDelay>
+        <writeBufferSize>16384</writeBufferSize>
+        <destination>
+            ${stash.destinations:127.0.0.1:4567}
+        </destination>
+        <connectionStragegy>
+            <roundRobin>
+                <connectionTTL>5 minutes</connectionTTL>
+            </roundRobin>
+        </connectionStragegy>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <shortenedLoggerNameLength>36</shortenedLoggerNameLength>
+            <customFields>{"appname": ${appname:unknow}}</customFields>
+        </encoder>
+    </appender>
+</configuration>
