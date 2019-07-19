@@ -14,3 +14,10 @@ netty:
     socket:
       keepalive: true
       backlog: 1024
+spring:
+  profiles:
+    active: druid
+  data:
+    elasticsearch:
+      cluster-nodes: 10.23.157.250:9300
+      cluster-name: docker-cluster

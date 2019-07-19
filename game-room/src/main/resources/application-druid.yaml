@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    druid:
+      url: 'jdbc:postgresql://192.168.99.100:30042/template1'
+      username: 'postgres'
+      password: 'postgres'
+      driver-class-name: 'org.postgresql.Driver'
+      initialSize: 1
+      maxActive: 5
+      maxWait: 100
+      validationQuery: SELECT 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      keep-alive: true
+      poolPreparedStatements: true
+      useGlobalDataSourceStat: true
+      filter:
+        stat:
+          enabled: true
+          dbType: postgresql
+          logSlowSql: true
+        wall:
+          enabled: true
+        slf4j:
+          enabled: true
+      stat-view-servlet:
+        url-pattern: /admin/druid/*

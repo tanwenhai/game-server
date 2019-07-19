@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <include resource="org/springframework/boot/logging/logback/base.xml"/>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
-  <!--<include resource="org/springframework/boot/logging/logback/console-appender.xml"/>-->
-  <!--<logger name="sun" level="ERROR"/>-->
-  <!--<logger name="java" level="ERROR"/>-->
-  <!--<root level="INFO">-->
-  <!--<appender-ref ref="CONSOLE" />-->
-  <!--</root>-->
-  <logger name="com.twh" level="DEBUG"/>
-</configuration >
+  <appender name="stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <!--空闲连接保持时间-->
+    <keepAliveDuration>10 minutes</keepAliveDuration>
+    <!--重连延迟-->
+    <reconnectionDelay>1 second</reconnectionDelay>
+    <!--缓存区大小-->
+    <writeBufferSize>16384</writeBufferSize>
+    <destination>
+      10.23.157.250:6666
+    </destination>
+    <connectionStrategy>
+      <roundRobin>
+        <connectionTTL>5 minutes</connectionTTL>
+      </roundRobin>
+    </connectionStrategy>
+
+    <!-- encoder is required -->
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <shortenedLoggerNameLength>36</shortenedLoggerNameLength>
+      <!-- 增加一个自定义字段appname 在es索引前加上appname -->
+      <customFields>{"appname":"test"}</customFields>
+    </encoder>
+    <!-- 缓冲大小 -->
+    <writeBufferSize>16384</writeBufferSize>
+  </appender>
+  <logger name="com.twh" level="debug" additivity="false">
+    <appender-ref ref="stash" />
+    <appender-ref ref="CONSOLE" />
+  </logger>
+  <root level="DEBUG">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>
